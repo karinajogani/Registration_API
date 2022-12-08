@@ -1,10 +1,9 @@
 from fastapi import APIRouter, status, HTTPException
 from db_base.database import SessionLocal
-from app.user.schemas import Userpy
+from app.user.schemas import Userpy, UserUpdate
 # from app.user.schemas import UserCreate
 from app.user.models import User
 import datetime
-
 
 router = APIRouter()
 db = SessionLocal()
@@ -37,7 +36,7 @@ def create_user(payload: Userpy):
         created_at = datetime.datetime.now(),
         # password = UserCreate.password + "notreallyhashed",
         is_delete = False
-        # password =  payload.password  
+        # password =  payload.password             
         # fake_hashed_password = User.password + "notreallyhashed"
     )
     
@@ -46,29 +45,38 @@ def create_user(payload: Userpy):
     
     return {"status": 200, "message": "Registration added successfully"}
 
-@router.patch('/users/{user_id}', status_code=status.HTTP_200_OK)
-def update_an_user(user_id: int, user: Userpy):
+@router.patch('/users/{user_id}', status_code=status.HTTP_201_CREATED)
+def update_an_user(user_id: int, user: UserUpdate):
+    user_to_update = db.query(User).filter(User.id == user_id).first()
+
+    if not user_to_update:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     
-    user_update = db.query(User).filter(User.id == user_id).first()
-        
-    user_update.updated_at = datetime.datetime.now(),
-    # user_to_update.password = user.password
-    
-    if user.name != None:
-        user_update.name = user.name
-    
-    if user.date_of_birth != None:
-        user_update.date_of_birth = user.date_of_birth
-    
-    if user.gender != None:
-        user_update.gender = user.gender
-    
-    if user.mail != None:
-        user_update.mail = user.mail
-            
+    user_update = user.dict(exclude_unset=True)
+    user_update.update(dict)
+    user_to_update.updated_at = datetime.datetime.now()
+    # user_update = user.dict(exclude_unset=True)
+    # for key, value in user_update.items():
+    #     setattr(user_to_update, key, value)
+
     db.commit()
-    
     return {"status": 200, "message": "Registration update successfully"}
+           
+    # if user.name != None:
+    #     user_update.name = user.name
+    
+    # if user.date_of_birth != None:
+    #     user_update.date_of_birth = user.date_of_birth
+    
+    # if user.gender != None:
+    #     user_update.gender = user.gender
+    
+    # if user.mail != None:
+    #     user_update.mail = user.mail
+            
+    # db.commit()
+    
+    # return {"status": 200, "message": "Registration update successfully"}
 
 @router.delete('/user/{user_id}')
 def delete_user(user_id: int):

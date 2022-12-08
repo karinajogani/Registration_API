@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, HTTPException
 from db_base.database import SessionLocal
-from app.entry.schemas import Entrypy
+from app.entry.schemas import Entrypy, EntryUpdate
 from app.entry.models import Entry
 import datetime
 
@@ -40,18 +40,25 @@ def create_entry(payload: Entrypy):
     return {"status": 200, "message": "Registration added successfully"}
 
 @router.put('/entries/{entry_id}', status_code=status.HTTP_200_OK)
-def update_an_entry(entry_id: int, entry: Entrypy):
-    
+def update_an_entry(entry_id: int, entry: EntryUpdate):
     entry_to_update = db.query(Entry).filter(Entry.id == entry_id).first()
     
+    if not entry_to_update:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        
     entry_to_update.updated_at = datetime.datetime.now()
-    
-    if entry.name != None:
-        entry_to_update.name = entry.name
-    
+    entry_update = entry.dict(exclude_unset=True)
+    for key, value in entry_update.items():
+        setattr(entry_to_update, key, value)
+        
     db.commit()
-    
     return {"status": 200, "message": "Registration update successfully"}
+    # if entry.name != None:
+    #     entry_to_update.name = entry.name
+    
+    # db.commit()
+    
+    # return {"status": 200, "message": "Registration update successfully"}
 
 @router.delete('/entry/{entry_id}')
 def delete_entry(entry_id: int):

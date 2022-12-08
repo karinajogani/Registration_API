@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, HTTPException
 from db_base.database import SessionLocal
-from app.competition.schemas import Competitionpy, CompetitionPy
+from app.competition.schemas import Competitionpy, CompetitionPy, CompetitionUpdate
 from app.competition.models import Competition
 import datetime
 
@@ -41,22 +41,28 @@ def create_competiton(payload: Competitionpy):
     return {"status": 200, "message": "Registration added successfully"}
 
 @router.put('/competitions/{competition_id}', status_code=status.HTTP_200_OK)
-def update_an_competition(competition_id: int, competition: Competitionpy):
-    
+def update_an_competition(competition_id: int, competition: CompetitionUpdate):
     competition_to_update = db.query(Competition).filter(Competition.id == competition_id).first()
     
+    if not competition_to_update:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    
     competition_to_update.updated_at = datetime.datetime.now(),
-
-    
-    if competition.name != None:
-        competition_to_update.name = competition.name
-        
-    if competition.url != None:
-        competition_to_update.url = competition.url
-        
+    competition_update = competition.dict(exclude_unset=True)
+    for key, value in competition_update.items():
+        setattr(competition_to_update, key, value)
+         
     db.commit()
+    return{"status": 200, "message": "Registration update successfully"}    
+    # if competition.name != None:
+    #     competition_to_update.name = competition.name
+        
+    # if competition.url != None:
+    #     competition_to_update.url = competition.url
+        
+    # db.commit()
     
-    return {"status": 200, "message": "Registration update successfully"}
+    # return {"status": 200, "message": "Registration update successfully"}
 
 @router.delete('/competition/{competition_id}')
 def delete_competition(competition_id: int):

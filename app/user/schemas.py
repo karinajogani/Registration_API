@@ -19,3 +19,9 @@ class User(Userpy):
     
     class Config:
         orm_mode = True
+        
+class UserUpdate(BaseModel):
+    name : Optional[str] = None
+    date_of_birth : Optional[str] = None
+    gender : Optional[str] = None
+    mail : Optional[str] = None
