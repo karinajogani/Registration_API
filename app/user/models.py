@@ -17,6 +17,3 @@ class User(Base):
     
     competitions = relationship("Competition", back_populates="owner")
     
-    def update(self, user_update):
-        for key, value in user_update.items():
-            setattr(self, key, value)

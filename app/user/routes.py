@@ -53,12 +53,14 @@ def update_an_user(user_id: int, user: UserUpdate):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     
     user_update = user.dict(exclude_unset=True)
-    user_update.update(dict)
+    dict.update(user)
+    user.update(user_update.dict())
+       
     user_to_update.updated_at = datetime.datetime.now()
-    # user_update = user.dict(exclude_unset=True)
-    # for key, value in user_update.items():
-    #     setattr(user_to_update, key, value)
-
+    user_update = user.dict(exclude_unset=True)
+    for key, value in user_update.items():
+        setattr(user_to_update, key, value)
+    
     db.commit()
     return {"status": 200, "message": "Registration update successfully"}
            

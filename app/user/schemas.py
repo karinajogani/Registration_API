@@ -21,7 +21,17 @@ class User(Userpy):
         orm_mode = True
         
 class UserUpdate(BaseModel):
-    name : Optional[str] = None
-    date_of_birth : Optional[str] = None
-    gender : Optional[str] = None
-    mail : Optional[str] = None
+    # name : Optional[str] = None
+    # date_of_birth : Optional[str] = None
+    # gender : Optional[str] = None
+    # mail : Optional[str] = None
+    
+    def update(self):
+        self.name : Optional[str] = None
+        self.date_of_birth : Optional[str] = None
+        self.gender : Optional[str] = None
+        self.mail : Optional[str] = None
+        # for key, value in UserUpdate.items():
+        #     setattr(self, key, value)
+        
+obj=UserUpdate()
