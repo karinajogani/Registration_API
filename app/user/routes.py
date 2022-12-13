@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, HTTPException
 from db_base.database import SessionLocal
-from app.user.schemas import Userpy
+from app.user.schemas import Userpy, UserUpdate
 # from app.user.schemas import UserCreate
 from app.user.models import User
 import datetime
@@ -46,13 +46,14 @@ def create_user(payload: Userpy):
     return {"status": 200, "message": "Registration added successfully"}
 
 @router.patch('/users/{user_id}', status_code=status.HTTP_201_CREATED)
-def update_an_user(user_id: int, user: Userpy):
+def update_an_user(user_id: int, user: UserUpdate):
     user_obj = db.query(User).filter(User.id == user_id).first()
 
     if not user_obj:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     
     # data_to_update = dict(user)
+
     # user_obj.update(data_to_update)
        
     user_obj.updated_at = datetime.datetime.now()
