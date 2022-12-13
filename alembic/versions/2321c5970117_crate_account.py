@@ -1,7 +1,7 @@
 """crate account
 
 Revision ID: 2321c5970117
-Revises: 
+Revises:
 Create Date: 2022-11-24 11:10:39.494982
 
 """

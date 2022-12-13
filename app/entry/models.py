@@ -13,5 +13,5 @@ class Entry(Base):
     updated_at = Column(DateTime)
     is_delete = Column(Boolean, default=False)
     # owner2_id = Column(Integer, ForeignKey("competitions.id"))
-    
-    # owner2 = relationship("Competition", back_populates = "entry")  
+
+    # owner2 = relationship("Competition", back_populates = "entry")

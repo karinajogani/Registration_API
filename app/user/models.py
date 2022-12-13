@@ -16,19 +16,21 @@ class User(Base):
     updated_at = Column(DateTime)
     is_delete = Column(Boolean, default=False)
     # password = Column(String)
-    
+
     competitions = relationship("Competition", back_populates="owner")
-    
-# class UserUp(User):
-#     def userupdate(self, update):
-#         self.name = update
-#         self.date_of_birth = update
-#         self.gender = update
-#         self.mail = update
+
+    def update(self, name, date_of_birth, gender, mail):
+        self.name = name
+        self.date_of_birth = date_of_birth
+        self.gender = gender
+        self.mail = mail
+
+user_obj = User()
+user_obj.update
     # user_update = UserUpdate.dict(exclude_unset=True)
     # for key, value in data_to_update.items():
     #     setattr(user_to_update, key, value)
-    
+
 # class UserUp(Base):
 #     __tablename__ = 'users'
     # def update(self):
