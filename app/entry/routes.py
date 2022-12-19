@@ -7,18 +7,21 @@ import datetime
 router = APIRouter()
 db = SessionLocal()
 
+# get method for getting the all entries
 @router.get('/entries', status_code=200)
 def get_all_entries():
     entries = db.query(Entry).all()
 
     return {"data": entries, "status": 200, "message": "Registration get successfully"}
 
+# get method for getting the particular 1 entry by id
 @router.get('/entries/{entry_id}', status_code=status.HTTP_200_OK)
 def get_an_entry(entry_id: int):
     entry = db.query(Entry).filter(Entry.id == entry_id).first()
 
     return {"data": entry, "status": 200, "message": "Registration retrive successfully"}
 
+# post method for create entries
 @router.post('/entries', status_code=status.HTTP_201_CREATED)
 def create_entry(payload: Entrypy):
 
@@ -39,6 +42,7 @@ def create_entry(payload: Entrypy):
 
     return {"status": 200, "message": "Registration added successfully"}
 
+# put method for update an entry
 @router.put('/entries/{entry_id}', status_code=status.HTTP_200_OK)
 def update_an_entry(entry_id: int, entry: EntryUpdate):
     entry_to_update = db.query(Entry).filter(Entry.id == entry_id).first()
@@ -60,6 +64,7 @@ def update_an_entry(entry_id: int, entry: EntryUpdate):
 
     # return {"status": 200, "message": "Registration update successfully"}
 
+# delete method for delete the entry
 @router.delete('/entry/{entry_id}')
 def delete_entry(entry_id: int):
     entry_to_delete = db.query(Entry).filter(Entry.id == entry_id).first()

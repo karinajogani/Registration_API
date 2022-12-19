@@ -2,11 +2,12 @@ from sqlalchemy.orm import relationship
 from db_base.database import Base
 from sqlalchemy import String, Integer, Column, DateTime, Boolean
 from uuid import UUID
+
 # from app.user.schemas import UserUpdate
-# from app.user.routes import user_update, user_to_update
 
 class User(Base):
     __tablename__ = 'users'
+    # id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
     id = Column(Integer, primary_key=True)
     name = Column(String(20))
     date_of_birth = Column(DateTime)
@@ -19,14 +20,14 @@ class User(Base):
 
     competitions = relationship("Competition", back_populates="owner")
 
-    def update(self, name, date_of_birth, gender, mail):
-        self.name = name
-        self.date_of_birth = date_of_birth
-        self.gender = gender
-        self.mail = mail
+#     def update(self, name, date_of_birth, gender, mail):
+#         self.name = name
+#         self.date_of_birth = date_of_birth
+#         self.gender = gender
+#         self.mail = mail
 
-user_obj = User()
-user_obj.update
+# user_obj = User()
+# user_obj.update
     # user_update = UserUpdate.dict(exclude_unset=True)
     # for key, value in data_to_update.items():
     #     setattr(user_to_update, key, value)

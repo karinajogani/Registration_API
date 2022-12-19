@@ -8,18 +8,21 @@ import datetime
 router = APIRouter()
 db = SessionLocal()
 
+# get method for getting the all users
 @router.get('/users/', status_code=200)
 def get_all_users():
     user = db.query(User).all()
 
     return {"data": user, "status": 200, "message": "Registration get successfully"}
 
+# get method for getting particular 1 user by id
 @router.get('/users/{user_id}', status_code=status.HTTP_200_OK)
 def get_an_user(user_id: int):
     user = db.query(User).filter(User.id == user_id).first()
 
     return {"data": user, "status": 200, "message": "Registration retrive successfully"}
 
+# post method for create user
 @router.post('/users/', status_code=status.HTTP_201_CREATED)
 def create_user(payload: Userpy):
 
@@ -45,6 +48,7 @@ def create_user(payload: Userpy):
 
     return {"status": 200, "message": "Registration added successfully"}
 
+# patch method for update user
 @router.patch('/users/{user_id}', status_code=status.HTTP_201_CREATED)
 def update_an_user(user_id: int, user: UserUpdate):
     user_obj = db.query(User).filter(User.id == user_id).first()
@@ -81,6 +85,7 @@ def update_an_user(user_id: int, user: UserUpdate):
 
     # return {"status": 200, "message": "Registration update successfully"}
 
+# delete method for delete the user
 @router.delete('/user/{user_id}')
 def delete_user(user_id: int):
     user_delete = db.query(User).filter(User.id == user_id).first()

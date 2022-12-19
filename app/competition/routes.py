@@ -7,18 +7,21 @@ import datetime
 router = APIRouter()
 db = SessionLocal()
 
+# get method fot get all competitions
 @router.get('/competitions', status_code=200)
 def get_all_competitions():
     competitions = db.query(Competition).all()
 
     return {"data": competitions, "status": 200, "message": "Registration get successfully"}
 
+# get method for get particular 1 competition by id
 @router.get('/competitions/{competition_id}', status_code=status.HTTP_200_OK)
 def get_an_competition(competition_id: int):
     competition = db.query(Competition).filter(Competition.id == competition_id).first()
 
     return {"data": competition, "status": 200, "message": "Registration retrive successfully"}
 
+# post method for create competition
 @router.post('/competitons', status_code=status.HTTP_201_CREATED)
 def create_competiton(payload: Competitionpy):
 
@@ -40,6 +43,7 @@ def create_competiton(payload: Competitionpy):
 
     return {"status": 200, "message": "Registration added successfully"}
 
+# put method for update competition
 @router.put('/competitions/{competition_id}', status_code=status.HTTP_200_OK)
 def update_an_competition(competition_id: int, competition: CompetitionUpdate):
     competition_to_update = db.query(Competition).filter(Competition.id == competition_id).first()
@@ -64,6 +68,7 @@ def update_an_competition(competition_id: int, competition: CompetitionUpdate):
 
     # return {"status": 200, "message": "Registration update successfully"}
 
+# delete method for delete competition
 @router.delete('/competition/{competition_id}')
 def delete_competition(competition_id: int):
     competition_to_delete = db.query(Competition).filter(Competition.id == competition_id).first()
