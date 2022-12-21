@@ -1,30 +1,50 @@
 from fastapi import APIRouter, status, HTTPException
 from db_base.database import SessionLocal
-from app.competition.schemas import Competitionpy, CompetitionPy, CompetitionUpdate
+from app.competition.schemas import Competitionpy, CompetitionUpdate
 from app.competition.models import Competition
 import datetime
 
 router = APIRouter()
 db = SessionLocal()
 
-# get method fot get all competitions
 @router.get('/competitions', status_code=200)
 def get_all_competitions():
+    """get method fot get all competitions
+
+    Returns:
+        _type_: _description_
+    """
     competitions = db.query(Competition).all()
 
     return {"data": competitions, "status": 200, "message": "Registration get successfully"}
 
-# get method for get particular 1 competition by id
 @router.get('/competitions/{competition_id}', status_code=status.HTTP_200_OK)
-def get_an_competition(competition_id: int):
+def get_an_competition(competition_id: str):
+    """get method for get particular 1 competition by id
+
+    Args:
+        competition_id (str): _description_
+
+    Returns:
+        _type_: _description_
+    """
     competition = db.query(Competition).filter(Competition.id == competition_id).first()
 
     return {"data": competition, "status": 200, "message": "Registration retrive successfully"}
 
-# post method for create competition
 @router.post('/competitons', status_code=status.HTTP_201_CREATED)
 def create_competiton(payload: Competitionpy):
+    """post method for create competition
 
+    Args:
+        payload (Competitionpy): _description_
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        _type_: _description_
+    """
     db_competition = db.query(Competition).filter(Competition.name == payload.name).first()
 
     if db_competition is not None:
@@ -35,7 +55,7 @@ def create_competiton(payload: Competitionpy):
         created_at = datetime.datetime.now(),
         is_delete = False,
         url = payload.url,
-        owner_id = CompetitionPy.id
+        user_id = payload.user_id
     )
 
     db.add(new_competition)
@@ -43,9 +63,17 @@ def create_competiton(payload: Competitionpy):
 
     return {"status": 200, "message": "Registration added successfully"}
 
-# put method for update competition
 @router.put('/competitions/{competition_id}', status_code=status.HTTP_200_OK)
-def update_an_competition(competition_id: int, competition: CompetitionUpdate):
+def update_an_competition(competition_id: str, competition: CompetitionUpdate):
+    """put method for update competition
+
+    Args:
+        competition_id (str): _description_
+        competition (CompetitionUpdate): _description_
+
+    Raises:
+        HTTPException: _description_
+    """
     competition_to_update = db.query(Competition).filter(Competition.id == competition_id).first()
 
     if not competition_to_update:
@@ -68,9 +96,19 @@ def update_an_competition(competition_id: int, competition: CompetitionUpdate):
 
     # return {"status": 200, "message": "Registration update successfully"}
 
-# delete method for delete competition
 @router.delete('/competition/{competition_id}')
-def delete_competition(competition_id: int):
+def delete_competition(competition_id: str):
+    """delete method for delete competition
+
+    Args:
+        competition_id (str): _description_
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        _type_: _description_
+    """
     competition_to_delete = db.query(Competition).filter(Competition.id == competition_id).first()
 
     if competition_to_delete is None:

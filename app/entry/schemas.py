@@ -3,8 +3,7 @@ from typing import Optional
 
 class Entrypy(BaseModel):
     name : Optional[str]
-    # id : int
-    # owner2_id : int
+    competition_id : str
 
     class Config:
         orm_mode = True

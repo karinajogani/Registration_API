@@ -3,15 +3,15 @@ from db_base.database import Base
 from typing import Optional
 from sqlalchemy import String, Integer, Column, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
+from app.competition.models import Competition
 
 class Entry(Base):
     __tablename__ = 'entries'
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
     name = Column(String(20))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     is_delete = Column(Boolean, default=False)
-    # owner2_id = Column(Integer, ForeignKey("competitions.id"))
-
-    # owner2 = relationship("Competition", back_populates = "entry")
+    competition_id = Column(UUID, ForeignKey(Competition.id))

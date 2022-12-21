@@ -1,12 +1,12 @@
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from jose import JWTError, jwt
 from typing import Union
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from authentication.schemas import User, UserInDB, Token, TokenData
 
-SECRET_KEY = "57dda13609a20cc963f7d634a735283fd37f0e1003f5dfa06d673223c8f6cbfa"
+SECRET_KEY = "4fee23d4604539ae2c56d4d1654c348d62598d4cc926461cc9705b041aa322f2"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
@@ -15,7 +15,7 @@ fake_users_db = {
         "username": "karina",
         "full_name": "karina",
         "email": "karina@gmail.com",
-        "hashed_password": "57dda13609a20cc963f7d634a735283fd37f0e1003f5dfa06d673223c8f6cbfa",
+        "hashed_password": "4fee23d4604539ae2c56d4d1654c348d62598d4cc926461cc9705b041aa322f2",
         "disabled": False,
     },
     # "radhika": {
@@ -27,7 +27,7 @@ fake_users_db = {
     # },
 }
 
-app = FastAPI()
+router = APIRouter()
 
 # def fake_hash_password(password: str):
 #     return "fakehashed" + password
@@ -103,7 +103,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
-@app.post("/token", response_model=Token)
+@router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(fake_users_db, form_data.username, form_data.password)
     if not user:
@@ -118,10 +118,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-@app.get("/users/me")
+@router.get("/users/me")
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
-@app.get("/users/me/items/")
+@router.get("/users/me/items/")
 async def read_own_items(current_user: User = Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]

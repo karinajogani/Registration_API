@@ -13,7 +13,7 @@ class Userpy(BaseModel):
 #     password: str
 
 class User(Userpy):
-    id: int
+    # id: int
     is_active: bool
     # competitions: List[CompetitionPy]
 

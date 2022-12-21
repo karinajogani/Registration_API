@@ -4,16 +4,17 @@ from typing import Optional
 class Competitionpy(BaseModel):
     name : Optional[str]
     url : Optional[str]
-
-class CompetitionCreate(Competitionpy):
-    pass
-
-class CompetitionPy(Competitionpy):
-    id: int
-    owner_id : int
+    user_id : str
 
     class Config:
         orm_mode = True
+
+# class CompetitionCreate(Competitionpy):
+#     pass
+
+# class CompetitionPy(Competitionpy):
+#     # id: str
+#     user_id : str
 
 
 class CompetitionUpdate(BaseModel):

@@ -8,24 +8,44 @@ import datetime
 router = APIRouter()
 db = SessionLocal()
 
-# get method for getting the all users
 @router.get('/users/', status_code=200)
 def get_all_users():
+    """get method for getting the all users
+
+    Returns:
+        _type_: _description_
+    """
     user = db.query(User).all()
 
     return {"data": user, "status": 200, "message": "Registration get successfully"}
 
-# get method for getting particular 1 user by id
 @router.get('/users/{user_id}', status_code=status.HTTP_200_OK)
-def get_an_user(user_id: int):
+def get_an_user(user_id: str):
+    """get method for getting particular 1 user by id
+
+    Args:
+        user_id (str): _description_
+
+    Returns:
+        _type_: _description_
+    """
     user = db.query(User).filter(User.id == user_id).first()
 
     return {"data": user, "status": 200, "message": "Registration retrive successfully"}
 
-# post method for create user
 @router.post('/users/', status_code=status.HTTP_201_CREATED)
 def create_user(payload: Userpy):
+    """post method for create user
 
+    Args:
+        payload (Userpy): _description_
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        _type_: _description_
+    """
     db_user = db.query(User).filter(User.name == payload.name).first()
 
     if db_user is not None:
@@ -37,10 +57,7 @@ def create_user(payload: Userpy):
         gender = payload.gender,
         mail = payload.mail,
         created_at = datetime.datetime.now(),
-        # password = UserCreate.password + "notreallyhashed",
         is_delete = False
-        # password =  payload.password
-        # fake_hashed_password = User.password + "notreallyhashed"
     )
 
     db.add(new_user)
@@ -48,23 +65,34 @@ def create_user(payload: Userpy):
 
     return {"status": 200, "message": "Registration added successfully"}
 
-# patch method for update user
 @router.patch('/users/{user_id}', status_code=status.HTTP_201_CREATED)
-def update_an_user(user_id: int, user: UserUpdate):
+def update_an_user(user_id: str, user: UserUpdate):
+    """patch method for update user
+
+    Args:
+        user_id (str): _description_
+        user (UserUpdate): _description_
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        _type_: _description_
+    """
     user_obj = db.query(User).filter(User.id == user_id).first()
 
     if not user_obj:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-    data_to_update = user.dict(exclude_unset=True)
+    # data_to_update = user.dict(exclude_unset=True)
 
-    user_obj.update(data_to_update)
+    # user_obj.update(data_to_update)
 
     user_obj.updated_at = datetime.datetime.now()
 
-    # data_to_update = user.dict(exclude_unset=True)
-    # for key, value in data_to_update.items():
-    #     setattr(user_obj, key, value)
+    data_to_update = user.dict(exclude_unset=True)
+    for key, value in data_to_update.items():
+        setattr(user_obj, key, value)
 
     db.commit()
     return {"status": 200, "message": "Registration update successfully"}
@@ -85,9 +113,19 @@ def update_an_user(user_id: int, user: UserUpdate):
 
     # return {"status": 200, "message": "Registration update successfully"}
 
-# delete method for delete the user
 @router.delete('/user/{user_id}')
-def delete_user(user_id: int):
+def delete_user(user_id: str):
+    """delete method for delete the user
+
+    Args:
+        user_id (str): _description_
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        _type_: _description_
+    """
     user_delete = db.query(User).filter(User.id == user_id).first()
 
     if user_delete is None:

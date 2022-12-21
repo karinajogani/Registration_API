@@ -2,13 +2,15 @@ from sqlalchemy.orm import relationship
 from db_base.database import Base
 from sqlalchemy import String, Integer, Column, DateTime, Boolean
 from uuid import UUID
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 # from app.user.schemas import UserUpdate
 
 class User(Base):
     __tablename__ = 'users'
     # id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
     name = Column(String(20))
     date_of_birth = Column(DateTime)
     gender = Column(String(10))
@@ -18,7 +20,6 @@ class User(Base):
     is_delete = Column(Boolean, default=False)
     # password = Column(String)
 
-    competitions = relationship("Competition", back_populates="owner")
 
 #     def update(self, name, date_of_birth, gender, mail):
 #         self.name = name
