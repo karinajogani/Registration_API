@@ -8,8 +8,13 @@ from sqlalchemy.dialects.postgresql import UUID
 from app.competition.models import Competition
 
 class Entry(Base):
+    """create the base class for the database
+
+    Args:
+        Base (_type_): _description_
+    """
     __tablename__ = 'entries'
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(20))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)

@@ -4,6 +4,11 @@ from typing import Optional, List
 
 
 class Userpy(BaseModel):
+    """create schema for User Table
+
+    Args:
+        BaseModel (_type_): _description_
+    """
     name : Optional[str]
     date_of_birth : Optional[str]
     gender : Optional[str]
@@ -21,6 +26,11 @@ class User(Userpy):
         orm_mode = True
 
 class UserUpdate(BaseModel):
+    """create schema for update in User Table
+
+    Args:
+        BaseModel (_type_): _description_
+    """
     name : Optional[str] = None
     date_of_birth : Optional[str] = None
     gender : Optional[str] = None

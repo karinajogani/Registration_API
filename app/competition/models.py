@@ -6,8 +6,13 @@ import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
 class Competition(Base):
+    """create the base class for the database
+
+    Args:
+        Base (_type_): _description_
+    """
     __tablename__ = 'competitions'
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(20))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
