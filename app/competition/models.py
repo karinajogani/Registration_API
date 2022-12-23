@@ -1,16 +1,12 @@
 from db_base.database import Base
-from sqlalchemy.orm import relationship
+# from sqlalchemy.orm import relationship
 from sqlalchemy import String, Column, DateTime, Boolean, ForeignKey
 from app.user.models import User
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
+"""create the base class for the database"""
 class Competition(Base):
-    """create the base class for the database
-
-    Args:
-        Base (_type_): _description_
-    """
     __tablename__ = 'competitions'
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(20))

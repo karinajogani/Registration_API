@@ -1,22 +1,14 @@
 from pydantic import BaseModel
 from typing import Optional
 
+"""create schema for Entry Table"""
 class Entrypy(BaseModel):
-    """create schema for Entry Table
-
-    Args:
-        BaseModel (_type_): _description_
-    """
     name : Optional[str]
     competition_id : str
 
     class Config:
         orm_mode = True
 
+"""create schema for update in Entry Table"""
 class EntryUpdate(BaseModel):
-    """create schema for update in Entry Table
-
-    Args:
-        BaseModel (_type_): _description_
-    """
     name : Optional[str] = None

@@ -1,51 +1,32 @@
-from fastapi import APIRouter, status, HTTPException
-from db_base.database import SessionLocal
+from fastapi import APIRouter, Depends, status, HTTPException
 from app.user.schemas import Userpy, UserUpdate
-# from app.user.schemas import UserCreate
 from app.user.models import User
 import datetime
+from db_base.database import get_db
+from sqlalchemy.orm import Session
 
 router = APIRouter()
-db = SessionLocal()
 
+"""get method for getting the all users"""
 @router.get('/users/', status_code=200)
-def get_all_users():
-    """get method for getting the all users
+def get_all_users(db: Session = Depends(get_db)):
 
-    Returns:
-        _type_: _description_
-    """
     user = db.query(User).all()
 
     return {"data": user, "status": 200, "message": "Registration get successfully"}
 
+"""get method for getting particular 1 user by id"""
 @router.get('/users/{user_id}', status_code=status.HTTP_200_OK)
-def get_an_user(user_id: str):
-    """get method for getting particular 1 user by id
+def get_an_user(user_id: str, db: Session = Depends(get_db)):
 
-    Args:
-        user_id (str): _description_
-
-    Returns:
-        _type_: _description_
-    """
     user = db.query(User).filter(User.id == user_id).first()
 
     return {"data": user, "status": 200, "message": "Registration retrive successfully"}
 
+"""post method for create user"""
 @router.post('/users/', status_code=status.HTTP_201_CREATED)
-def create_user(payload: Userpy):
-    """post method for create user
+def create_user(payload: Userpy, db: Session = Depends(get_db)):
 
-    Args:
-        payload (Userpy): _description_
-
-    Raises:
-        HTTPException: _description_
-
-    Returns:
-        _type_: _description_
-    """
     db_user = db.query(User).filter(User.name == payload.name).first()
 
     if db_user is not None:
@@ -65,20 +46,10 @@ def create_user(payload: Userpy):
 
     return {"status": 200, "message": "Registration added successfully"}
 
+"""patch method for update user"""
 @router.patch('/users/{user_id}', status_code=status.HTTP_201_CREATED)
-def update_an_user(user_id: str, user: UserUpdate):
-    """patch method for update user
+def update_an_user(user_id: str, user: UserUpdate, db: Session = Depends(get_db)):
 
-    Args:
-        user_id (str): _description_
-        user (UserUpdate): _description_
-
-    Raises:
-        HTTPException: _description_
-
-    Returns:
-        _type_: _description_
-    """
     user_obj = db.query(User).filter(User.id == user_id).first()
 
     if not user_obj:
@@ -113,19 +84,10 @@ def update_an_user(user_id: str, user: UserUpdate):
 
     # return {"status": 200, "message": "Registration update successfully"}
 
+"""delete method for delete the user"""
 @router.delete('/user/{user_id}')
-def delete_user(user_id: str):
-    """delete method for delete the user
+def delete_user(user_id: str, db: Session = Depends(get_db)):
 
-    Args:
-        user_id (str): _description_
-
-    Raises:
-        HTTPException: _description_
-
-    Returns:
-        _type_: _description_
-    """
     user_delete = db.query(User).filter(User.id == user_id).first()
 
     if user_delete is None:

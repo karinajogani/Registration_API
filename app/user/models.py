@@ -1,4 +1,4 @@
-from sqlalchemy.orm import relationship
+# from sqlalchemy.orm import relationship
 from db_base.database import Base
 from sqlalchemy import String, Integer, Column, DateTime, Boolean
 from uuid import UUID
@@ -7,12 +7,8 @@ from sqlalchemy.dialects.postgresql import UUID
 
 # from app.user.schemas import UserUpdate
 
+"""create the base class for the database"""
 class User(Base):
-    """create the base class for the database
-
-    Args:
-        Base (_type_): _description_
-    """
     __tablename__ = 'users'
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(20))

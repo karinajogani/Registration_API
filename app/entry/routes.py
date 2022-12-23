@@ -1,50 +1,32 @@
-from fastapi import APIRouter, status, HTTPException
-from db_base.database import SessionLocal
+from fastapi import APIRouter, Depends, status, HTTPException
 from app.entry.schemas import Entrypy, EntryUpdate
 from app.entry.models import Entry
 import datetime
+from db_base.database import get_db
+from sqlalchemy.orm import Session
 
 router = APIRouter()
-db = SessionLocal()
 
+""" get method for getting the all entries"""
 @router.get('/entries', status_code=200)
-def get_all_entries():
-    """ get method for getting the all entries
+def get_all_entries(db: Session = Depends(get_db)):
 
-    Returns:
-        _type_: _description_
-    """
     entries = db.query(Entry).all()
 
     return {"data": entries, "status": 200, "message": "Registration get successfully"}
 
+""" get method for getting the particular 1 entry by id"""
 @router.get('/entries/{entry_id}', status_code=status.HTTP_200_OK)
-def get_an_entry(entry_id: str):
-    """ get method for getting the particular 1 entry by id
+def get_an_entry(entry_id: str, db: Session = Depends(get_db)):
 
-    Args:
-        entry_id (str): _description_
-
-    Returns:
-        _type_: _description_
-    """
     entry = db.query(Entry).filter(Entry.id == entry_id).first()
 
     return {"data": entry, "status": 200, "message": "Registration retrive successfully"}
 
+""" post method for create entries"""
 @router.post('/entries', status_code=status.HTTP_201_CREATED)
-def create_entry(payload: Entrypy):
-    """ post method for create entries
+def create_entry(payload: Entrypy, db: Session = Depends(get_db)):
 
-    Args:
-        payload (Entrypy): _description_
-
-    Raises:
-        HTTPException: _description_
-
-    Returns:
-        _type_: _description_
-    """
     db_entry = db.query(Entry).filter(Entry.name == payload.name).first()
 
     if db_entry is not None:
@@ -62,20 +44,10 @@ def create_entry(payload: Entrypy):
 
     return {"status": 200, "message": "Registration added successfully"}
 
+"""put method for update an entry"""
 @router.put('/entries/{entry_id}', status_code=status.HTTP_200_OK)
-def update_an_entry(entry_id: str, entry: EntryUpdate):
-    """put method for update an entry
+def update_an_entry(entry_id: str, entry: EntryUpdate, db: Session = Depends(get_db)):
 
-    Args:
-        entry_id (str): _description_
-        entry (EntryUpdate): _description_
-
-    Raises:
-        HTTPException: _description_
-
-    Returns:
-        _type_: _description_
-    """
     entry_to_update = db.query(Entry).filter(Entry.id == entry_id).first()
 
     if not entry_to_update:
@@ -90,24 +62,13 @@ def update_an_entry(entry_id: str, entry: EntryUpdate):
     return {"status": 200, "message": "Registration update successfully"}
     # if entry.name != None:
     #     entry_to_update.name = entry.name
-
     # db.commit()
-
     # return {"status": 200, "message": "Registration update successfully"}
 
+"""delete method for delete the entry"""
 @router.delete('/entry/{entry_id}')
-def delete_entry(entry_id: str):
-    """delete method for delete the entry
+def delete_entry(entry_id: str, db: Session = Depends(get_db)):
 
-    Args:
-        entry_id (str): _description_
-
-    Raises:
-        HTTPException: _description_
-
-    Returns:
-        _type_: _description_
-    """
     entry_to_delete = db.query(Entry).filter(Entry.id == entry_id).first()
 
     if entry_to_delete is None:

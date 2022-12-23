@@ -8,6 +8,7 @@ from sqlalchemy import pool
 from app.user.models import User
 from app.competition.models import Competition
 from app.entry.models import Entry
+from authentication.models import Userauth
 
 from alembic import context
 
